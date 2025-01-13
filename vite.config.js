@@ -8,4 +8,10 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
   },
+  alias: {
+    '@emotion/styled': '@emotion/styled',
+    '@emotion/react': '@emotion/react',
+    '@mui/x-date-pickers': '@mui/x-date-pickers',
+
+  }
 })
