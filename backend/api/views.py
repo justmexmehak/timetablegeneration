@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Course, Constraint
 from .serializers import CreateCourseSerializer, CourseSerializer, ConstraintSerializer, CreateConstraintSerializer
+from .utils import generate
 
 @api_view(['POST'])
 def post_course(request):
@@ -37,6 +38,20 @@ def post_constraints(request):
         constraint = serializer.save()
         return Response(ConstraintSerializer(constraint).data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def generate_timetable(request):
+    constraints = Constraint.objects.all()
+    courses = Course.objects.all()
+
+    if not constraints.exists() or not courses.exists():
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    constraints_data = ConstraintSerializer(constraints.last()).data
+    courses_data = CourseSerializer(courses, many=True).data
+
+    data = generate(constraints_data, courses_data)
+    return JsonResponse(data, safe=False)
 
 from django.http import JsonResponse
 
