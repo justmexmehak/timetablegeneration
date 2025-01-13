@@ -229,15 +229,15 @@ const AddConstraints = () => {
   };
 
   useEffect(() => {
-    // axios.get("http://localhost:8000/get-courses").then((res) => {
-    //   setLoading(false);
-    //   var temp_subjects = [];
-    //   // eslint-disable-next-line
-    //   res.data.map((item) => {
-    //     temp_subjects.push({ label: item.name, value: item.name });
-    //   });
-    //   setSubjects(temp_subjects);
-    // });
+    axios.get("https://mehakk.pythonanywhere.com/api/get-courses").then((res) => {
+      setLoading(false);
+      var temp_subjects = [];
+      // eslint-disable-next-line
+      res.data.map((item) => {
+        temp_subjects.push({ label: item.name, value: item.name });
+      });
+      setSubjects(temp_subjects);
+    });
   }, []);
   return (
     <>

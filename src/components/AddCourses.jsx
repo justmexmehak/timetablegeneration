@@ -40,17 +40,17 @@ const AddCourses = () => {
           lectureno: lecturesno,
           duration: duration,
           instructor_name: iname,
-          start_hr: "3", // startHour.getHours(),
-          end_hr: "4" // endHour.getHours(),
+          start_hr: startHour.getHours(),
+          end_hr: endHour.getHours(),
         };
         // Swal.fire({
         //     text: "Course registered successfully!",
         //     icon: "success",
         // });
         console.log(body);
-        // axios.post("http://127.0.0.1:8000/api/add-course/", body)
+        axios.post("https://mehakk.pythonanywhere.com/api/add-course/", body)
         // axios.get('http://localhost:8000/api/test-endpoint/')
-        axios.get('https://jubilant-telegram-pvg59rv6g9r26qjr-8000.app.github.dev/api/test-endpoint/')
+        // axios.get('https://mehakk.pythonanywhere.com/api/test-endpoint/')
           .then(() => {
             Swal.fire({
               text: "Course registered successfully!",

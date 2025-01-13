@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 // axios.get('http://127.0.0.1:8000/api/test-endpoint/')
-axios.get('https://jubilant-telegram-pvg59rv6g9r26qjr-8000.app.github.dev/api/test-endpoint/')
+axios.get('https://mehakk.pythonanywhere.com/api/test-endpoint/')
   .then((response) => {
     console.log("Success:", response.data);
   })
