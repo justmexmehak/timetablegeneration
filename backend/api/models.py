@@ -9,7 +9,7 @@ class Course(models.Model):
 
 class Instructor(models.Model):
     name = models.CharField(max_length=255)
-    available_days = ArrayField(models.CharField(max_length=10))
+    available_days = models.JSONField()
 
     def __str__(self):
         return self.name
