@@ -2,11 +2,20 @@ from django.db import models
 
 class Course(models.Model):
     name = models.CharField(max_length=255)
-    lectureno = models.IntegerField()
-    duration = models.IntegerField()
-    instructor_name = models.CharField(max_length=255)
-    start_hr = models.CharField(max_length=5)
-    end_hr = models.CharField(max_length=5)
+    credit_hours = models.IntegerField()
+
+    def __str__(self):
+        return self.name
+
+class Instructor(models.Model):
+    name = models.CharField(max_length=255)
+    available_days = models.ManyToManyField(WorkingDay)
+
+    def __str__(self):
+        return self.name
+
+class Room(models.Model):
+    name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name

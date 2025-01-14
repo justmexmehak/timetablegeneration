@@ -1,15 +1,38 @@
 from rest_framework import serializers
-from .models import Course, WorkingDay, Constraint
+from .models import Course, WorkingDay, Constraint, Instructor, Room
 
 class CreateCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['name', 'lectureno', 'duration', 'instructor_name', 'start_hr', 'end_hr']
+        fields = ['name', 'credit_hours']
 
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['id', 'name', 'lectureno', 'duration', 'instructor_name', 'start_hr', 'end_hr']
+        fields = ['id', 'name', 'credit_hours']
+
+class RoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = ['id', 'name']
+
+class CreateInstructorSerializer(serializers.ModelSerializer):
+    available_days = serializers.SlugRelatedField(
+        many=True,
+        slug_field='day',
+        queryset=WorkingDay.objects.all()
+    )
+
+    class Meta:
+        model = Instructor
+        fields = ['name', 'available_days']
+
+class InstructorSerializer(serializers.ModelSerializer):
+    available_days = WorkingDaySerializer(many=True)
+
+    class Meta:
+        model = Instructor
+        fields = ['id', 'name', 'available_days']
 
 class WorkingDaySerializer(serializers.ModelSerializer):
     class Meta:
