@@ -16,20 +16,8 @@ class RoomSerializer(serializers.ModelSerializer):
         model = Room
         fields = ['id', 'name']
 
-class CreateInstructorSerializer(serializers.ModelSerializer):
-    available_days = serializers.SlugRelatedField(
-        many=True,
-        slug_field='day',
-        queryset=WorkingDay.objects.all()
-    )
-
-    class Meta:
-        model = Instructor
-        fields = ['name', 'available_days']
 
 class InstructorSerializer(serializers.ModelSerializer):
-    available_days = WorkingDaySerializer(many=True)
-
     class Meta:
         model = Instructor
         fields = ['id', 'name', 'available_days']

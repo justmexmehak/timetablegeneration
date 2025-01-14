@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Course, Constraint, Room, Instructor
-from .serializers import CreateCourseSerializer, CourseSerializer, ConstraintSerializer, CreateConstraintSerializer, InstructorSerializer, CreateInstructorSerializer, RoomSerializer
+from .serializers import CreateCourseSerializer, CourseSerializer, ConstraintSerializer, CreateConstraintSerializer, InstructorSerializer, RoomSerializer
 from .utils import generate
 
 @api_view(['POST'])
@@ -32,7 +32,7 @@ def get_instructors(request):
 
 @api_view(['POST'])
 def post_instructor(request):
-    serializer = CreateInstructorSerializer(data=request.data)
+    serializer = InstructorSerializer(data=request.data)
     if serializer.is_valid():
         instructor = serializer.save()
         return Response(InstructorSerializer(instructor).data, status=status.HTTP_201_CREATED)

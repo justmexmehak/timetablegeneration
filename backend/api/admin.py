@@ -7,9 +7,8 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(Instructor)
 class InstructorAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    filter_horizontal = ('available_days',)
-
+    list_display = ('name', 'available_days',)
+    
 @admin.register(WorkingDay)
 class WorkingDayAdmin(admin.ModelAdmin):
     list_display = ('day', 'start_hr', 'end_hr', 'total_hours')
