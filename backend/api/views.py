@@ -113,6 +113,7 @@ def fake_generate_timetable(request):
             {
                 "id": 1,
                 "name": "Math",
+                "day": "Monday",
                 "startSlot": 1,
                 "duration": 2,
                 "roomNo": "101"
@@ -120,6 +121,7 @@ def fake_generate_timetable(request):
             {
                 "id": 2,
                 "name": "Science",
+                "day": "Monday",
                 "startSlot": 3,
                 "duration": 1,
                 "roomNo": "102"
@@ -129,6 +131,7 @@ def fake_generate_timetable(request):
             {
                 "id": 1,
                 "name": "History",
+                "day": "Monday",
                 "startSlot": 1,
                 "duration": 2,
                 "roomNo": "201"
@@ -136,6 +139,7 @@ def fake_generate_timetable(request):
             {
                 "id": 2,
                 "name": "Geography",
+                "day": "Tuesdays",
                 "startSlot": 3,
                 "duration": 1,
                 "roomNo": "202"
