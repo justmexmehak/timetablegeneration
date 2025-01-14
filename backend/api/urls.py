@@ -13,4 +13,5 @@ urlpatterns = [
     path('assign-courses/', assign_courses, name='assign_courses'),
      path('add-constraint/', add_constraint, name='add_constraint'),
     path('get-constraints/', get_constraints, name='get_constraints'),
+    path('fake-generate-timetable/', fake_generate_timetable, name='fake_generate_timetable'),
 ]

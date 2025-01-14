@@ -106,6 +106,44 @@ def assign_courses(request):
 
     return Response({'message': 'Courses assigned successfully'}, status=status.HTTP_201_CREATED)
 
+@api_view(['GET'])
+def fake_generate_timetable(request):
+    placeholder_data = {
+        "Section A": [
+            {
+                "id": 1,
+                "name": "Math",
+                "startSlot": 1,
+                "duration": 2,
+                "roomNo": "101"
+            },
+            {
+                "id": 2,
+                "name": "Science",
+                "startSlot": 3,
+                "duration": 1,
+                "roomNo": "102"
+            }
+        ],
+        "Section B": [
+            {
+                "id": 1,
+                "name": "History",
+                "startSlot": 1,
+                "duration": 2,
+                "roomNo": "201"
+            },
+            {
+                "id": 2,
+                "name": "Geography",
+                "startSlot": 3,
+                "duration": 1,
+                "roomNo": "202"
+            }
+        ]
+    }
+    return Response(placeholder_data)
+
 from django.http import JsonResponse
 
 @api_view(['GET'])
