@@ -20,6 +20,12 @@ class Room(models.Model):
     def __str__(self):
         return self.name
 
+class Section(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+        
 class CourseAssignment(models.Model):
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -27,12 +33,6 @@ class CourseAssignment(models.Model):
 
     def __str__(self):
         return f"{self.section.name} - {self.course.name} - {self.instructor.name}"
-
-class Section(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
 
 class WorkingDay(models.Model):
     day = models.CharField(max_length=10)
