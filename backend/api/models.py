@@ -25,7 +25,7 @@ class Section(models.Model):
 
     def __str__(self):
         return self.name
-        
+
 class CourseAssignment(models.Model):
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -34,13 +34,20 @@ class CourseAssignment(models.Model):
     def __str__(self):
         return f"{self.section.name} - {self.course.name} - {self.instructor.name}"
 
-class WorkingDay(models.Model):
-    day = models.CharField(max_length=10)
-    start_hr = models.CharField(max_length=5)
-    end_hr = models.CharField(max_length=5)
-    total_hours = models.CharField(max_length=5)
+# class WorkingDay(models.Model):
+#     day = models.CharField(max_length=10)
+#     start_hr = models.CharField(max_length=5)
+#     end_hr = models.CharField(max_length=5)
+#     total_hours = models.CharField(max_length=5)
+
+# class Constraint(models.Model):
+#     working_days = models.ManyToManyField(WorkingDay)
+#     consecutive_subjects = models.JSONField()
+#     non_consecutive_subjects = models.JSONField()
 
 class Constraint(models.Model):
-    working_days = models.ManyToManyField(WorkingDay)
-    consecutive_subjects = models.JSONField()
-    non_consecutive_subjects = models.JSONField()
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    rooms = models.ManyToManyField(Room)
+
+    def __str__(self):
+        return f"{self.course.name} Constraint"
