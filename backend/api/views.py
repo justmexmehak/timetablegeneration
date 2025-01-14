@@ -112,19 +112,43 @@ def fake_generate_timetable(request):
         "Section A": [
             {
                 "id": 1,
-                "name": "Math",
-                "day": "Monday",
+                "name": "MIS",
+                "day": "Wednesday",
                 "startSlot": 1,
-                "duration": 2,
-                "roomNo": "101"
+                "duration": 3,
+                "roomNo": "FF-104"
             },
             {
                 "id": 2,
-                "name": "Science",
-                "day": "Monday",
-                "startSlot": 3,
-                "duration": 1,
-                "roomNo": "102"
+                "name": "PST",
+                "day": "Wednesday",
+                "startSlot": 8,
+                "duration": 2,
+                "roomNo": "FF-147"
+            },
+            {
+                "id": 3,
+                "name": "PDC",
+                "day": "Thursday",
+                "startSlot": 7,
+                "duration": 3,
+                "roomNo": "CSLab1"
+            },
+            {
+                "id": 4,
+                "name": "DevOps",
+                "day": "Saturday",
+                "startSlot": 1,
+                "duration": 3,
+                "roomNo": "CSLab1"
+            },
+            {
+                "id": 5,
+                "name": "DL",
+                "day": "Saturday",
+                "startSlot": 4,
+                "duration": 3,
+                "roomNo": "FF-104"
             }
         ],
         "Section B": [
