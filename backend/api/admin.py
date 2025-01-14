@@ -21,3 +21,11 @@ class ConstraintAdmin(admin.ModelAdmin):
 @admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
     list_display = ('name',)
+
+@admin.register(Section)
+class SectionAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+@admin.register(CourseAssignment)
+class CourseAssignmentAdmin(admin.ModelAdmin):
+    list_display = ('section', 'course', 'instructor')

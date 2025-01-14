@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Course, WorkingDay, Constraint, Instructor, Room
+from .models import Course, WorkingDay, Constraint, Instructor, Room, CourseAssignment, Section
 
 class CreateCourseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,6 +21,16 @@ class InstructorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Instructor
         fields = ['id', 'name', 'available_days']
+
+class CourseAssignmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CourseAssignment
+        fields = ['section', 'course', 'instructor']
+
+class SectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Section
+        fields = ['id', 'name']
 
 class WorkingDaySerializer(serializers.ModelSerializer):
     class Meta:

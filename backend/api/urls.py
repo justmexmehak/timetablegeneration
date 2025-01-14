@@ -12,4 +12,5 @@ urlpatterns = [
     path('test-endpoint/', test_endpoint, name='test_endpoint'),
     path('get-rooms/', get_rooms, name='get_rooms'),
     path('add-room/', post_room, name='post_room'),
+    path('assign-courses/', assign_courses, name='assign_courses'),
 ]

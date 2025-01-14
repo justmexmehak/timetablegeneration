@@ -4,8 +4,8 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Course, Constraint, Room, Instructor
-from .serializers import CreateCourseSerializer, CourseSerializer, ConstraintSerializer, CreateConstraintSerializer, InstructorSerializer, RoomSerializer
+from .models import Course, Constraint, Room, Instructor, CourseAssignment, Section
+from .serializers import CreateCourseSerializer, CourseSerializer, ConstraintSerializer, CreateConstraintSerializer, InstructorSerializer, RoomSerializer, CourseAssignmentSerializer, SectionSerializer
 from .utils import generate
 
 @api_view(['POST'])
@@ -81,6 +81,29 @@ def generate_timetable(request):
 
     data = generate(constraints_data, courses_data)
     return JsonResponse(data, safe=False)
+
+@api_view(['POST'])
+def assign_courses(request):
+    section_name = request.data.get('section_name')
+    assignments = request.data.get('assignments')
+
+    if not section_name or not assignments:
+        return Response({'error': 'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)
+
+    section, created = Section.objects.get_or_create(name=section_name)
+
+    for assignment in assignments:
+        course_id = assignment.get('course')
+        instructor_id = assignment.get('instructor')
+        if not course_id or not instructor_id:
+            continue
+        CourseAssignment.objects.create(
+            section=section,
+            course_id=course_id,
+            instructor_id=instructor_id
+        )
+
+    return Response({'message': 'Courses assigned successfully'}, status=status.HTTP_201_CREATED)
 
 from django.http import JsonResponse
 
