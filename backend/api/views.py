@@ -139,7 +139,7 @@ def fake_generate_timetable(request):
             {
                 "id": 2,
                 "name": "Geography",
-                "day": "Tuesdays",
+                "day": "Tuesday",
                 "startSlot": 3,
                 "duration": 1,
                 "roomNo": "202"

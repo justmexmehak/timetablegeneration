@@ -14,7 +14,10 @@ import theme from "../theme";
 
 import AddCourses from "../components/AddCourses";
 import AddConstraints from "../components/AddConstraints";
-// import ViewTimeTable from "../components/ViewTimeTable";
+import ViewTimeTable from "../components/ViewTimeTable";
+import AddInstructor from "../components/AddInstructor";
+import AddRoom from "../components/AddRoom";
+import AssignCourses from "../components/AssignCourses";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -62,8 +65,13 @@ function TabPanel(props) {
           <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
             <Tabs value={value} onChange={handleChange} centered>
               <Tab label="Add Courses" />
+              <Tab label="Add Instructor"/>
+              <Tab label="Add Room"/>
+              <Tab label="Assign Courses" />
               <Tab label="Add Constraints" />
               <Tab label="View Time Table" />
+              
+      
             </Tabs>
           </Box>
           <center>
@@ -72,13 +80,26 @@ function TabPanel(props) {
               {/* <h1>Add Courses</h1> */}
             </TabPanel>
             <TabPanel value={value} index={1}>
+              <AddInstructor />
+              {/* <h1>View Timetable</h1> */}
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+              <AddRoom />
+              {/* <h1>View Timetable</h1> */}
+            </TabPanel>
+            <TabPanel value={value} index={3}>
+              <AssignCourses />
+              {/* <h1>View Timetable</h1> */}
+            </TabPanel>
+            <TabPanel value={value} index={4}>
               <AddConstraints />
               {/* <h1>Add Constraints</h1> */}
             </TabPanel>
-            <TabPanel value={value} index={2}>
-              {/* <ViewTimeTable /> */}
-              <h1>View Timetable</h1>
+            <TabPanel value={value} index={5}>
+              <ViewTimeTable />
+              {/* <h1>View Timetable</h1> */}
             </TabPanel>
+
           </center>
         </ThemeProvider>
       </>
