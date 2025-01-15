@@ -17,12 +17,12 @@ def create_model_input():
     sections = Section.objects.all()
     constraints = Constraint.objects.all()
 
-    print("Courses:", courses)
-    print("Instructors:", instructors)
-    print("Course Assignments:", course_assignments)
-    print("Rooms:", rooms)
-    print("Sections:", sections)
-    print("Constraints:", constraints)
+    # print("Courses:", courses)
+    # print("Instructors:", instructors)
+    # print("Course Assignments:", course_assignments)
+    # print("Rooms:", rooms)
+    # print("Sections:", sections)
+    # print("Constraints:", constraints)
 
     timeSlotsPerDay = 9
     noOfDays = 6
@@ -36,11 +36,11 @@ def create_model_input():
         duration = course.credit_hours
         RequirementSet.append((section, course, instructor, duration))
 
-    print("RequirementSet:", RequirementSet)
+    # print("RequirementSet:", RequirementSet)
 
     Rooms = [room for room in rooms]
 
-    print("Rooms:", Rooms)  
+    # print("Rooms:", Rooms)  
 
     AssignedRooms = {}
     # {"course": [rooms]}
@@ -49,13 +49,21 @@ def create_model_input():
         rooms = constraint.rooms.all()
         AssignedRooms[course] = rooms
     
-    print("AssignedRooms:", AssignedRooms)
+    # print("AssignedRooms:", AssignedRooms)
 
     VisitingFacultyAvailibility = {}
     # {"instructor": [days]}
     for instructor in instructors:
         VisitingFacultyAvailibility[instructor] = instructor.available_days
 
-    print("VisitingFacultyAvailibility:", VisitingFacultyAvailibility)
+    # print("VisitingFacultyAvailibility:", VisitingFacultyAvailibility)
+
+    PossibleRooms = {
+        (course, room): (room in AssignedRooms[course]) if course in AssignedRooms
+        else all((room, k) not in AssignedRooms.items() for k in Courses if k != course) for course in Courses for room in Rooms
+    }
+    print(PossibleRooms)
+    PossibleRoomIds = {course: {Rooms.index(room) for room in Rooms if PossibleRooms[course, room]} for course in Courses}
+    print(PossibleRoomIds)
 
 create_model_input()
