@@ -18,7 +18,7 @@ const ViewTimeTable = () => {
   const getTimeTable = () => {
     setClicked(true);
     axios
-      .get("https://mehakk.pythonanywhere.com/api/fake-generate-timetable/")
+      .get("https://mehakk.pythonanywhere.com/api/generate-timetable/")
       .then((res) => {
         const temp = {};
         for (const [key, value] of Object.entries(res.data)) {

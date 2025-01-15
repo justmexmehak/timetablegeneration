@@ -279,11 +279,13 @@ def create_model():
         "7D": []
     }
 
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
     for i in InstanceSet:
         timetable[i.section.name].append({
             "id": i.requirementId,
             "name": i.course.name,
-            "day": solver.Value(Days[i]),
+            "day": days[solver.Value(Days[i])],
             "startSlot": solver.Value(Starts[i]) + 1,
             "duration": i.duration,
             "room": Rooms[solver.Value(RoomsDict[i])].name
