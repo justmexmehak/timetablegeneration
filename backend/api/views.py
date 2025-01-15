@@ -288,7 +288,8 @@ def create_model():
             "day": days[solver.Value(Days[i])],
             "startSlot": solver.Value(Starts[i]) + 1,
             "duration": i.duration,
-            "room": Rooms[solver.Value(RoomsDict[i])].name
+            "room": Rooms[solver.Value(RoomsDict[i])].name,
+            "instructor": i.instructor.name
         })
     
     print(timetable)
