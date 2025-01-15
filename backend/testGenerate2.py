@@ -1,5 +1,6 @@
 import os
 import django
+import collections
 
 # Set the settings module
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
@@ -62,8 +63,14 @@ def create_model_input():
         (course, room): (room in AssignedRooms[course]) if course in AssignedRooms
         else all((room, k) not in AssignedRooms.items() for k in courses if k != course) for course in courses for room in Rooms
     }
-    print(PossibleRooms)
+    # print(PossibleRooms)
     PossibleRoomIds = {course: {Rooms.index(room) for room in Rooms if PossibleRooms[course, room]} for course in courses}
-    print(PossibleRoomIds)
+    # print(PossibleRoomIds)
+
+    # Create instances
+    Instance = collections.namedtuple('instance_data', 'section course instructor duration requirementId')
+    InstanceSet = [Instance(section=r[0], course=r[1], instructor=r[2], duration=r[3], requirementId=z) for z, r in enumerate(RequirementSet)]
+    print(Instance)
+    print(InstanceSet)
 
 create_model_input()
