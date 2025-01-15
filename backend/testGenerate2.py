@@ -1,6 +1,7 @@
 import os
 import django
 import collections
+from ortools.sat.python import cp_model
 
 # Set the settings module
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
@@ -70,7 +71,55 @@ def create_model_input():
     # Create instances
     Instance = collections.namedtuple('instance_data', 'section course instructor duration requirementId')
     InstanceSet = [Instance(section=r[0], course=r[1], instructor=r[2], duration=r[3], requirementId=z) for z, r in enumerate(RequirementSet)]
-    print(Instance)
-    print(InstanceSet)
+    # print(Instance)
+    # print(InstanceSet)
+    return InstanceSet, Rooms, PossibleRoomIds, VisitingFacultyAvailibility, timeSlotsPerDay, noOfDays
 
-create_model_input()
+def create_model():
+    InstanceSet, Rooms, PossibleRoomIds, VisitingFacultyAvailibility, timeSlotsPerDay, noOfDays = create_model_input()
+
+    # Create Decision Variables
+    model = cp_model.CpModel()
+
+    Starts, RoomsDict, Days = {}, {}, {}
+
+    maxRoomIndex = len(Rooms) - 1
+
+    for i in InstanceSet:
+        start_var = model.NewIntVar(0, 6, f'start of instance {InstanceSet.index(i)}')
+        # end_var = model.NewIntVar(0, 8, f'end of instance {InstanceSet.index(i)}')
+        room_var = model.NewIntVar(0, maxRoomIndex, f'room of instance {InstanceSet.index(i)}')
+        day_var = model.NewIntVar(0, noOfDays - 1, f'day of instance {InstanceSet.index(i)}')
+        Starts[i] = start_var
+        # Ends[i] = end_var
+        RoomsDict[i] = room_var
+        Days[i] = day_var
+
+    for a in InstanceSet:
+        for b in InstanceSet:
+            if a != b:
+                # The same section can not have 2 classes at the same time
+                if a.section == b.section or a.instructor == b.instructor:
+                    same_day = model.NewBoolVar(f'same_day_{InstanceSet.index(a)}_{InstanceSet.index(b)}')
+                    model.Add(Days[a] == Days[b]).OnlyEnforceIf(same_day)
+                    model.Add(Days[a] != Days[b]).OnlyEnforceIf(same_day.Not())
+                    # Prevent overlap only if the two classes are on the same day
+                    # model.Add(Starts[a] >= Ends[b]).OnlyEnforceIf(same_day)
+                    model.Add(Starts[b] >= Starts[a] + a.duration).OnlyEnforceIf(same_day)
+
+    print(model.Validate())
+
+    solver = cp_model.CpSolver()
+
+    status = solver.Solve(model)
+
+    if status == cp_model.OPTIMAL:
+    # roomsClasses = {x: [] for x in Rooms}
+        for i in InstanceSet:
+            print(i.requirementId, i.course, i.duration, 'start = ', solver.Value(Starts[i]), 'day = ', solver.Value(Days[i]))
+
+create_model()
+
+
+
+
