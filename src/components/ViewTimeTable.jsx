@@ -79,7 +79,7 @@ const ViewTimeTable = () => {
                           {event ? (
                             <>
                               <Typography variant="body2">{event.name}</Typography>
-                              <Typography variant="body2">{event.roomNo}</Typography>
+                              <Typography variant="body2">{event.room}</Typography>
                             </>
                           ) : (
                             // <Typography variant="body2">Free</Typography>
