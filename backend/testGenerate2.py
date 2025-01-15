@@ -60,10 +60,10 @@ def create_model_input():
 
     PossibleRooms = {
         (course, room): (room in AssignedRooms[course]) if course in AssignedRooms
-        else all((room, k) not in AssignedRooms.items() for k in Courses if k != course) for course in Courses for room in Rooms
+        else all((room, k) not in AssignedRooms.items() for k in courses if k != course) for course in courses for room in Rooms
     }
     print(PossibleRooms)
-    PossibleRoomIds = {course: {Rooms.index(room) for room in Rooms if PossibleRooms[course, room]} for course in Courses}
+    PossibleRoomIds = {course: {Rooms.index(room) for room in Rooms if PossibleRooms[course, room]} for course in courses}
     print(PossibleRoomIds)
 
 create_model_input()
