@@ -118,6 +118,25 @@ def create_model():
         for i in InstanceSet:
             print(i.requirementId, i.course, i.duration, 'start = ', solver.Value(Starts[i]), 'day = ', solver.Value(Days[i]))
 
+    timetable = {
+        "7A": [],
+        "7B": [],
+        "7C": [],
+        "7D": []
+    }
+
+    for i in InstanceSet:
+        timetable[i.section.name].append({
+            "id": i.requirementId,
+            "name": i.course.name,
+            "day": solver.Value(Days[i]),
+            "startSlot": solver.Value(Starts[i]) + 1,
+            "duration": i.duration,
+            "room": Rooms[solver.Value(RoomsDict[i])].name
+        })
+    
+    print(timetable)
+
 create_model()
 
 
