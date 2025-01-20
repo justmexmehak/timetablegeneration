@@ -227,10 +227,10 @@ def create_model_input():
     InstanceSet = [Instance(section=r[0], course=r[1], instructor=r[2], duration=r[3], requirementId=z) for z, r in enumerate(RequirementSet)]
     # print(Instance)
     # print(InstanceSet)
-    return InstanceSet, Rooms, PossibleRoomIds, VisitingFacultyAvailibility, timeSlotsPerDay, noOfDays
+    return InstanceSet, Rooms, PossibleRoomIds, VisitingFacultyAvailibility, timeSlotsPerDay, noOfDays, sections, AssignedRooms
 
 def create_model():
-    InstanceSet, Rooms, PossibleRoomIds, VisitingFacultyAvailibility, timeSlotsPerDay, noOfDays = create_model_input()
+    InstanceSet, Rooms, PossibleRoomIds, VisitingFacultyAvailibility, timeSlotsPerDay, noOfDays, sections, AssignedRooms = create_model_input()
 
     # Create Decision Variables
     model = cp_model.CpModel()
@@ -246,8 +246,8 @@ def create_model():
         Days[i] = model.NewIntVar(0, noOfDays - 1, f'day_{i.requirementId}')
 
      # 2. Room Assignment with Distribution
-    regular_rooms = [idx for idx, room in enumerate(Rooms) if not room.endswith('Lab')]
-    lab_rooms = [idx for idx, room in enumerate(Rooms) if room.endswith('Lab')]
+    regular_rooms = [idx for idx, room in enumerate(Rooms) if not room.name.endswith('Lab')]
+    lab_rooms = [idx for idx, room in enumerate(Rooms) if room.name.endswith('Lab')]
 
     for i in InstanceSet:
         if i.course in AssignedRooms:
@@ -262,7 +262,7 @@ def create_model():
     # 3. Room Distribution Constraints
     # Encourage using different rooms on the same day
     for day in range(noOfDays):
-        for section in Sections:
+        for section in sections:
             section_classes = [i for i in InstanceSet if i.section == section]
             for a in section_classes:
                 for b in section_classes:
@@ -322,7 +322,7 @@ def create_model():
     
     if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
         print("Found a solution!")
-        print_solution(solver, InstanceSet, Starts, Days, RoomsDict, Rooms)
+        # print_solution(solver, InstanceSet, Starts, Days, RoomsDict, Rooms)
     else:
         print(f"No solution found. Status code: {status}")
         print("\nSolver statistics:")
