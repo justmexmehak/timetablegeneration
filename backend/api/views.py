@@ -245,57 +245,67 @@ def create_model():
         RoomsDict[i] = model.NewIntVar(0, len(Rooms) - 1, f'room_{i.requirementId}')
         Days[i] = model.NewIntVar(0, noOfDays - 1, f'day_{i.requirementId}')
 
-     # 2. Basic Scheduling Constraints
-    for a in InstanceSet:
-        for b in InstanceSet:
-            if a.requirementId < b.requirementId:
-                # Only add constraints for same section or instructor
-                if a.section == b.section or a.instructor == b.instructor:
-                    # Must be on different days or not overlap if on same day
-                    same_day = model.NewBoolVar(f'same_day_{a.requirementId}_{b.requirementId}')
-                    model.Add(Days[a] == Days[b]).OnlyEnforceIf(same_day)
-                    model.Add(Days[a] != Days[b]).OnlyEnforceIf(same_day.Not())
-                    
-                    # If on same day, ensure no overlap with spacing
-                    model.Add(Starts[a] + a.duration + 1 <= Starts[b]).OnlyEnforceIf(same_day)
+     # 2. Room Assignment with Distribution
+    regular_rooms = [idx for idx, room in enumerate(Rooms) if not room.endswith('Lab')]
+    lab_rooms = [idx for idx, room in enumerate(Rooms) if room.endswith('Lab')]
 
-    # 3. Fixed Room Assignment using AddAllowedAssignments
     for i in InstanceSet:
         if i.course in AssignedRooms:
             allowed_rooms = [idx for idx, room in enumerate(Rooms) 
                            if room in AssignedRooms[i.course]]
             if allowed_rooms:
                 model.AddAllowedAssignments([RoomsDict[i]], [[room] for room in allowed_rooms])
+        else:
+            # For non-lab courses, allow any regular room
+            model.AddAllowedAssignments([RoomsDict[i]], [[room] for room in regular_rooms])
 
-    # 4. Time Distribution Hints
-    # Encourage spacing between classes
-    for section in Sections:
-        section_classes = [i for i in InstanceSet if i.section == section]
-        for day in range(noOfDays):
-            day_classes = []
-            for i in section_classes:
-                is_on_day = model.NewBoolVar(f'section_{section}_day_{day}_class_{i.requirementId}')
-                model.Add(Days[i] == day).OnlyEnforceIf(is_on_day)
-                model.Add(Days[i] != day).OnlyEnforceIf(is_on_day.Not())
-                day_classes.append((is_on_day, i))
-            
-            # Limit classes per day
-            model.Add(sum(is_on_day for is_on_day, _ in day_classes) <= 3)
+    # 3. Room Distribution Constraints
+    # Encourage using different rooms on the same day
+    for day in range(noOfDays):
+        for section in Sections:
+            section_classes = [i for i in InstanceSet if i.section == section]
+            for a in section_classes:
+                for b in section_classes:
+                    if a.requirementId < b.requirementId:
+                        same_day = model.NewBoolVar(f'same_day_{day}_{a.requirementId}_{b.requirementId}')
+                        model.Add(Days[a] == day).OnlyEnforceIf(same_day)
+                        model.Add(Days[b] == day).OnlyEnforceIf(same_day)
+                        
+                        # If on same day, try to use different rooms when possible
+                        model.Add(RoomsDict[a] != RoomsDict[b]).OnlyEnforceIf(same_day)
 
-            # Try to encourage spacing between classes on the same day
-            for idx, (is_on_day1, class1) in enumerate(day_classes):
-                for class2 in section_classes[idx + 1:]:
-                    is_on_day2 = model.NewBoolVar(f'section_{section}_day_{day}_class_{class2.requirementId}')
-                    model.Add(Days[class2] == day).OnlyEnforceIf(is_on_day2)
-                    model.Add(Days[class2] != day).OnlyEnforceIf(is_on_day2.Not())
+    # 4. Time and Room Conflict Prevention
+    for a in InstanceSet:
+        for b in InstanceSet:
+            if a.requirementId < b.requirementId:
+                # Check for same day and room conflicts
+                same_day = model.NewBoolVar(f'same_day_{a.requirementId}_{b.requirementId}')
+                same_room = model.NewBoolVar(f'same_room_{a.requirementId}_{b.requirementId}')
+                
+                model.Add(Days[a] == Days[b]).OnlyEnforceIf(same_day)
+                model.Add(Days[a] != Days[b]).OnlyEnforceIf(same_day.Not())
+                
+                model.Add(RoomsDict[a] == RoomsDict[b]).OnlyEnforceIf(same_room)
+                model.Add(RoomsDict[a] != RoomsDict[b]).OnlyEnforceIf(same_room.Not())
+                
+                # If same day and room, prevent time overlap
+                both_same = model.NewBoolVar(f'both_same_{a.requirementId}_{b.requirementId}')
+                model.Add(same_day + same_room == 2).OnlyEnforceIf(both_same)
+                model.Add(same_day + same_room < 2).OnlyEnforceIf(both_same.Not())
+                
+                model.Add(Starts[a] + a.duration <= Starts[b]).OnlyEnforceIf(both_same)
+
+    # 5. Section and Instructor Constraints
+    for a in InstanceSet:
+        for b in InstanceSet:
+            if a.requirementId < b.requirementId:
+                if a.section == b.section or a.instructor == b.instructor:
+                    same_day = model.NewBoolVar(f'same_day_inst_{a.requirementId}_{b.requirementId}')
+                    model.Add(Days[a] == Days[b]).OnlyEnforceIf(same_day)
+                    model.Add(Days[a] != Days[b]).OnlyEnforceIf(same_day.Not())
                     
-                    # If both classes are on this day, ensure spacing
-                    both_on_day = model.NewBoolVar(f'both_on_day_{class1.requirementId}_{class2.requirementId}')
-                    model.Add(is_on_day1 + is_on_day2 == 2).OnlyEnforceIf(both_on_day)
-                    model.Add(is_on_day1 + is_on_day2 < 2).OnlyEnforceIf(both_on_day.Not())
-                    
-                    # Try to maintain at least 2 slots between classes
-                    model.Add(Starts[class2] >= Starts[class1] + class1.duration + 2).OnlyEnforceIf(both_on_day)
+                    # If on same day, ensure proper spacing
+                    model.Add(Starts[a] + a.duration + 1 <= Starts[b]).OnlyEnforceIf(same_day)
 
     print(f"Model validation: {model.Validate()}")
 
