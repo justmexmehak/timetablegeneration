@@ -318,8 +318,8 @@ def create_model():
 
     # Visiting Faculty Day Constraints
     for i in InstanceSet:
-        if i.instructor in VisitingFacultyDays:
-            allowed_days = VisitingFacultyDays[i.instructor]
+        if i.instructor in VisitingFacultyAvailibility:
+            allowed_days = VisitingFacultyAvailibility[i.instructor]
             print(f"Restricting {i.instructor} to days: {allowed_days}")
             model.AddAllowedAssignments([Days[i]], [[day] for day in allowed_days])
 

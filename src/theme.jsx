@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material";
 
-var primary = "#3f8bc7";
+var primary = "#007958";
 var secondary = "#363636";
 
 const theme = createTheme({

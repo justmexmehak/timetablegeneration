@@ -50,18 +50,18 @@ const ViewTimeTable = () => {
             </Typography>
             <div style={{ display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex" }}>
-                <div style={{ flex: "1", border: "1px solid black", padding: "10px" }}>
+                <div style={{ flex: "1", border: "2px solid #363636", padding: "10px" }}>
                   <Typography variant="subtitle1">Time</Typography>
                 </div>
                 {daysOfWeek.map((day) => (
-                  <div key={day} style={{ flex: "1", border: "1px solid black", padding: "10px" }}>
+                  <div key={day} style={{ flex: "1", border: "2px solid #363636", padding: "10px" }}>
                     <Typography variant="subtitle1">{day}</Typography>
                   </div>
                 ))}
               </div>
               {slots.map((slot) => (
                 <div key={slot} style={{ display: "flex" }}>
-                  <div style={{ flex: "1", border: "1px solid black", padding: "10px" }}>
+                  <div style={{ flex: "1", border: "2px solid #363636", padding: "10px" }}>
                     <Typography variant="body2">{slotToTime(slot)}</Typography>
                   </div>
                   {daysOfWeek.map((day) => {
@@ -69,17 +69,18 @@ const ViewTimeTable = () => {
                       (e) => e.day === day && e.startSlot <= slot && slot < e.startSlot + e.duration
                     );
                     return (
-                      <div key={day} style={{ flex: "1", border: "1px solid black", padding: "10px" }}>
+                      <div key={day} style={{ flex: "1", border: "2px solid #363636", padding: "10px" }}>
                         <Paper
                           style={{
                             padding: "10px",
-                            backgroundColor: event ? "#3f8bc7" : "#fff",
+                            backgroundColor: event ? "#007958" : "#fff",
                           }}
                         >
                           {event ? (
                             <>
-                              <Typography variant="body2">{event.name}</Typography>
-                              <Typography variant="body2">{event.room}</Typography>
+                              <Typography variant="body2" style={{ fontWeight: "bold", color: "#fbfaf5" }}>{event.name}</Typography>
+                              <Typography variant="caption" style={{ fontSize: "10px", display: "block", color: "#fbfaf5" }}>{event.room}</Typography>
+                              <Typography variant="caption" style={{ fontSize: "10px", display: "block", color: "#fbfaf5" }}>{event.instructor}</Typography>
                             </>
                           ) : (
                             // <Typography variant="body2">Free</Typography>
