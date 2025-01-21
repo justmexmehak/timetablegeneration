@@ -208,9 +208,18 @@ def create_model_input():
     # print("AssignedRooms:", AssignedRooms)
 
     VisitingFacultyAvailibility = {}
+    DAY_MAP = {
+        'Monday': 0,
+        'Tuesday': 1,
+        'Wednesday': 2,
+        'Thursday': 3,
+        'Friday': 4,
+        'Saturday': 5
+    }
+
     # {"instructor": [days]}
     for instructor in instructors:
-        VisitingFacultyAvailibility[instructor] = instructor.available_days
+        VisitingFacultyAvailibility[instructor] = [DAY_MAP[day] for day in instructor.available_days]
 
     # print("VisitingFacultyAvailibility:", VisitingFacultyAvailibility)
 
@@ -306,6 +315,13 @@ def create_model():
                     
                     # If on same day, ensure proper spacing
                     model.Add(Starts[a] + a.duration + 1 <= Starts[b]).OnlyEnforceIf(same_day)
+
+    # Visiting Faculty Day Constraints
+    for i in InstanceSet:
+        if i.instructor in VisitingFacultyDays:
+            allowed_days = VisitingFacultyDays[i.instructor]
+            print(f"Restricting {i.instructor} to days: {allowed_days}")
+            model.AddAllowedAssignments([Days[i]], [[day] for day in allowed_days])
 
     print(f"Model validation: {model.Validate()}")
 
