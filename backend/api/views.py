@@ -209,12 +209,12 @@ def create_model_input():
 
     VisitingFacultyAvailibility = {}
     DAY_MAP = {
-        'Monday': 0,
-        'Tuesday': 1,
-        'Wednesday': 2,
-        'Thursday': 3,
-        'Friday': 4,
-        'Saturday': 5
+        'monday': 0,
+        'tuesday': 1,
+        'wednesday': 2,
+        'thursday': 3,
+        'friday': 4,
+        'saturday': 5
     }
 
     # {"instructor": [days]}
