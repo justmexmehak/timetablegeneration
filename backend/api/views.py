@@ -345,16 +345,14 @@ def create_model():
         print(solver.ResponseStats())
         return {"error": "no solution found"}
 
-    timetable = {
-        "7A": [],
-        "7B": [],
-        "7C": [],
-        "7D": []
-    }
+    timetable = {}
 
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
     for i in InstanceSet:
+        section_name = i.section.name
+        if section_name not in timetable:
+            timetable[section_name] = []
         timetable[i.section.name].append({
             "id": i.requirementId,
             "name": i.course.name,
